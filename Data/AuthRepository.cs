@@ -56,8 +56,16 @@ namespace ShopApp.API.Data {
             }
         }
 
-        public async Task<bool> UseerExists (string username) {
+        public async Task<bool> UserExists (string username) {
             if (await _context.Users.AnyAsync(x => x.Username == username))
+                return true;
+            
+            return false;
+
+        }
+
+        public async Task<bool> EmailExists (string email) {
+            if (await _context.Users.AnyAsync(x => x.Email == email))
                 return true;
             
             return false;

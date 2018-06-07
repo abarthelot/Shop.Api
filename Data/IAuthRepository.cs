@@ -8,6 +8,7 @@ namespace ShopApp.API.Data
     {
          Task<User> Register(User user, string password); 
          Task<User> Login(string username, string password);
-         Task<bool> UseerExists(string username);
+         Task<bool> UserExists(string username);
+         Task<bool> EmailExists(string email);
     }
 }

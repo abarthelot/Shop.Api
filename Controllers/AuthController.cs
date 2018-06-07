@@ -25,16 +25,21 @@ namespace ShopApp.API.Controllers {
         public async Task<IActionResult> Register([FromBody]UserForRegisterDto userForRegisterDto)
         {
             userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
+            userForRegisterDto.Email = userForRegisterDto.Email.ToLower();
 
-            if (await _repo.UseerExists(userForRegisterDto.Username))
+            if (await _repo.UserExists(userForRegisterDto.Username))
                 ModelState.AddModelError("Username", "Username already exists");
+
+            if (await _repo.EmailExists(userForRegisterDto.Email))
+                ModelState.AddModelError("Email", "Email already exists");
 
             // validate request
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             else{
                 var userToCreate = new User{
-                    Username = userForRegisterDto.Username
+                    Username = userForRegisterDto.Username,
+                    Email = userForRegisterDto.Email
                 };
 
                 var createUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
@@ -48,7 +53,7 @@ namespace ShopApp.API.Controllers {
             var userFromRepo = await _repo.Login(userForLoginDto.Username.ToLower(), userForLoginDto.Password);
 
             if (userFromRepo == null)
-                return Unauthorized();
+                return StatusCode(401,"Bad Credentials");
 
             // generate token
             var tokenHandler = new JwtSecurityTokenHandler();
