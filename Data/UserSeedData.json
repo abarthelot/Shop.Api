@@ -1,0 +1,91 @@
+[
+  {
+    "Username": "admin",
+    "Email": "a.barthelot19@gmail.com",
+    "Password": "12345678",
+    "Joined": "2017-06-06",
+    "address": "352 School Lane, Cannondale, South Carolina, 2825",
+    "PostalCode": "982",
+    "Country": "Sri Lanka"
+  },
+  {
+    "Username": "Julie",
+    "Email": "juliegeorge@enthaze.com",
+    "Password": "password",
+    "Joined": "2017-06-06",
+    "address": "352 School Lane, Cannondale, South Carolina, 2825",
+    "PostalCode": "982",
+    "Country": "Sri Lanka",
+    "Photo": [
+      {
+        "url": "https://randomuser.me/api/portraits/women/45.jpg",
+        "IsProfilePic": true,
+        "IsItemImage": false
+      }
+    ]
+  },
+  {
+    "Username": "Rae",
+    "Email": "raegeorge@enthaze.com",
+    "Password": "password",
+    "Joined": "2017-08-21",
+    "address": "537 Berkeley Place, Springville, Colorado, 8167",
+    "PostalCode": "994",
+    "Country": "Sudan",
+    "Photo": [
+      {
+        "url": "https://randomuser.me/api/portraits/women/40.jpg",
+        "IsProfilePic": true,
+        "IsItemImage": false
+      }
+    ]
+  },
+  {
+    "Username": "Noreen",
+    "Email": "noreengeorge@enthaze.com",
+    "Password": "password",
+    "Joined": "2017-04-30",
+    "address": "512 Lorimer Street, Belva, Minnesota, 8683",
+    "PostalCode": "812",
+    "Country": "Yemen",
+    "Photo": [
+      {
+        "url": "https://randomuser.me/api/portraits/women/97.jpg",
+        "IsProfilePic": true,
+        "IsItemImage": false
+      }
+    ]
+  },
+  {
+    "Username": "Eve",
+    "Email": "evegeorge@enthaze.com",
+    "Password": "password",
+    "Joined": "2017-08-20",
+    "address": "378 Rugby Road, Jardine, Alaska, 8378",
+    "PostalCode": "163",
+    "Country": "Tokelau",
+    "Photo": [
+      {
+        "url": "https://randomuser.me/api/portraits/women/51.jpg",
+        "IsProfilePic": true,
+        "IsItemImage": false
+      }
+    ]
+  },
+  {
+    "Username": "Teresa",
+    "Email": "teresageorge@enthaze.com",
+    "Password": "password",
+    "Joined": "2017-06-20",
+    "address": "755 Middagh Street, Gorst, Federated States Of Micronesia, 9700",
+    "PostalCode": "544",
+    "Country": "Korea (South)",
+    "Photo": [
+      {
+        "url": "https://randomuser.me/api/portraits/women/99.jpg",
+        "IsProfilePic": true,
+        "IsItemImage": false
+      }
+    ]
+  }
+]
