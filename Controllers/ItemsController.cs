@@ -20,6 +20,7 @@ namespace ShopApp.API.Controllers
             _repo = repo;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetItems () {
             var items = await _repo.GetItems();
@@ -27,9 +28,10 @@ namespace ShopApp.API.Controllers
             return Ok (itemsToReturn);
         }
 
+        [AllowAnonymous]
         [HttpGet ("{id}")]
         public async Task<IActionResult> GetItem (int id) {
-            var item = await _repo.GetUser (id);
+            var item = await _repo.GetItem (id);
             var itemToReturn = _mapper.Map<ItemForDetailsDto>(item);
             return Ok (itemToReturn);
         }

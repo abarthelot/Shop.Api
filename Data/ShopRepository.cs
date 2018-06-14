@@ -73,9 +73,8 @@ namespace ShopApp.API.Data
 
         public async Task<IEnumerable<FavoriteItem>> GetFavorites(int userId)
         {
-            var items = await _context.Favorites.Where(f => f.UserId == userId).ToListAsync();
+            var items = await _context.Favorites.Include(i => i.Item).ThenInclude(item => item.Photo).Where(f => f.UserId == userId).ToListAsync();
             return items;
         }
-
     }
 }

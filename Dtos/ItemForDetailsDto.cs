@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace ShopApp.API.Dtos
 {
@@ -11,7 +12,9 @@ namespace ShopApp.API.Dtos
         public string ShipingCountry{ get; set; }
         public DateTime CreatedDate { get; set; }
         public int Quantity { get; set; }
+        public double UnitPrice { get; set; }
         public string ImageUrl { get; set; }
         public string OtherUrl { get; set; } 
+        public ICollection<ImagesForDetailsDto> Photo {get; set;}
     }
 }

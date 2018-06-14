@@ -37,6 +37,16 @@ namespace ShopApp.API.Data {
             _context.SaveChanges();
         }
 
+        public void SeedFav(){
+            var itemData = System.IO.File.ReadAllText("Data/FavSeedData.json");
+            var items = JsonConvert.DeserializeObject<List<FavoriteItem>>(itemData);
+            foreach (var item in items)
+            {
+                _context.Favorites.Add(item);
+            }
+            _context.SaveChanges();
+        }
+
         private void createHashAndSalt(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using(var hmac = new System.Security.Cryptography.HMACSHA512()){

@@ -16,6 +16,7 @@ namespace ShopApp.API.Models
         public int Quantity { get; set; }
         public string ImageUrl { get; set; }
         public string OtherUrl { get; set; } 
+        public double UnitPrice { get; set; }
         public User User { get; set; }
         public int UserId { get; set; }
 

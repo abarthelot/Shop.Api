@@ -14,5 +14,6 @@ namespace ShopApp.API.Data
          Task<Item> CreateItem(Item item);
          Task<IEnumerable<Item>> GetItems();
          Task<Item> GetItem(int id);
+         Task<IEnumerable<FavoriteItem>> GetFavorites(int id);
     }
 }
