@@ -15,5 +15,9 @@ namespace ShopApp.API.Data
          Task<IEnumerable<Item>> GetItems();
          Task<Item> GetItem(int id);
          Task<IEnumerable<FavoriteItem>> GetFavorites(int id);
+         Task<Image> GetImage(int id);
+         Image GetProfilePic(int id);
+         Task<Image> CreateImage(Image image);
+         Image GetUserImage(int id);
     }
 }

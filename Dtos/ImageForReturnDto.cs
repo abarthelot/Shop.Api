@@ -1,8 +1,8 @@
 using System;
 
-namespace ShopApp.API.Models
+namespace ShopApp.API.Dtos
 {
-    public class Image
+    public class ImageForReturnDto
     {
         public int Id { get; set; }
         public string Url { get; set; }
@@ -10,8 +10,5 @@ namespace ShopApp.API.Models
         public bool IsItemImage { get; set; }
         public string PublicId { get; set; }
         public DateTime DateAdded { get; set; }
-
-        public User User { get; set; }
-        public int UserId { get; set; }
     }
 }

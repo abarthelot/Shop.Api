@@ -11,12 +11,12 @@ namespace ShopApp.API.Helpers
         {
             CreateMap<User, UsersForListDto>().ForMember(
                 dest => dest.PhotoUrl,opt => {
-                    opt.MapFrom(src => src.Photo.FirstOrDefault(p => p.IsProfilePic).Url);
+                    opt.MapFrom(src => src.Photo.FirstOrDefault(p => p.IsProfilePic == true && p.IsItemImage == false).Url);
                 }
             );
             CreateMap<User, UserForDetailsDto>().ForMember(
                 dest => dest.PhotoUrl,opt => {
-                    opt.MapFrom(src => src.Photo.FirstOrDefault(p => p.IsProfilePic).Url);
+                    opt.MapFrom(src => src.Photo.FirstOrDefault(p => p.IsProfilePic == true && p.IsItemImage == false).Url);
                 }
             );
 
@@ -24,14 +24,18 @@ namespace ShopApp.API.Helpers
 
             CreateMap<Item, ItemsForListDto>().ForMember(
                 dest => dest.ImageUrl,opt => {
-                    opt.MapFrom(src => src.Photo.FirstOrDefault().Url);
+                    opt.MapFrom(src => src.Photo.FirstOrDefault( p => p.IsProfilePic == true ).Url);
                 }
             );
             CreateMap<Item, ItemForDetailsDto>().ForMember(
                 dest => dest.ImageUrl,opt => {
-                    opt.MapFrom(src => src.Photo.FirstOrDefault().Url);
+                    opt.MapFrom(src => src.Photo.FirstOrDefault( p => p.IsProfilePic == true ).Url);
                 }
             );
+
+            CreateMap<ItemForUpdateDto,Item>(); 
+            CreateMap<ImagesForCreateDto, Image>();
+            CreateMap<Image, ImageForReturnDto>();
         }
     }
 }

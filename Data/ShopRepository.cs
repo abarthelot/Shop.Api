@@ -76,5 +76,28 @@ namespace ShopApp.API.Data
             var items = await _context.Favorites.Include(i => i.Item).ThenInclude(item => item.Photo).Where(f => f.UserId == userId).ToListAsync();
             return items;
         }
+
+        public Task<Image> GetImage(int id)
+        {
+            var image = _context.Images.FirstOrDefaultAsync(p => p.Id == id);
+            return image;
+        }
+
+        public Image GetProfilePic(int id)
+        {
+            return _context.Items.FirstOrDefault(i => i.Id == id).Photo.FirstOrDefault(p => p.IsProfilePic == true);
+        }
+
+        public async Task<Image> CreateImage(Image image)
+        {
+            await _context.Images.AddAsync(image);
+            await _context.SaveChangesAsync();
+            return image;
+        }
+
+        public Image GetUserImage(int id)
+        {
+            return _context.Users.FirstOrDefault(i => i.Id == id).Photo.FirstOrDefault(p => p.IsProfilePic == true && p.IsItemImage == false);
+        }
     }
 }

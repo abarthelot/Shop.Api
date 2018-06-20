@@ -9,16 +9,22 @@ using ShopApp.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using AutoMapper;
 
 namespace ShopApp.API.Controllers {
     [Route ("api/[controller]")]
     public class AuthController : Controller {
         private readonly IAuthRepository _repo;
+        private readonly IShopRepository _shop;
         private readonly IConfiguration _config;
-        public AuthController(IAuthRepository repo, IConfiguration config)
+        public readonly IMapper _mapper;
+
+        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper, IShopRepository shop)
         {
             _config = config;
             _repo = repo;
+            _mapper = mapper;
+            _shop = shop;
         }
 
         [HttpPost("register")]
@@ -73,14 +79,17 @@ namespace ShopApp.API.Controllers {
                 };
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 var tokenString = tokenHandler.WriteToken(token);
+                var userReturn = _shop.GetUser(userFromRepo.Id);
 
-                return Ok(new { tokenString });
+                var user = _mapper.Map<UsersForListDto>(userReturn.Result);
+
+                return Ok(new { tokenString, user });
+            
             }
             catch
             {
                 return StatusCode(500,"Something went wrong.");
             }
-            
         }
     }
 }

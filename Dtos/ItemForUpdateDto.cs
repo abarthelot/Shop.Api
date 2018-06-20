@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ShopApp.API.Dtos
 {
-    public class ItemForDetailsDto
+    public class ItemForUpdateDto
     {
         public int Id { get; set; }
         public string Title { get; set; }
