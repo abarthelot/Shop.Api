@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ShopApp.API.Models;
 using System.Linq;
+using ShopApp.API.Helpers;
 
 namespace ShopApp.API.Data
 {
@@ -57,10 +58,46 @@ namespace ShopApp.API.Data
             return item;
         }
 
-        public async Task<IEnumerable<Item>> GetItems()
+        public async Task<PagedList<Item>> GetItems(ItemParams param)
         {
-            var items = await _context.Items.Include(p => p.Photo).ToListAsync();
-            return items;
+            var items = await _context.Items.Include(p => p.Photo).Where(i => i.Quantity > 0).OrderByDescending(u => u.CreatedDate).ToListAsync();
+
+            if(param.IsService != "all")
+            {
+                if(param.IsService == "service")
+                {
+                    items = items.Where(i => i.IsService == true).ToList();
+                }else
+                {
+                    items = items.Where(i => i.IsService == false).ToList();
+                }
+
+            }
+            if(param.OrderBy.Trim() == "price-dsc")
+            {
+                items = items.OrderByDescending(u => u.UnitPrice).ToList();
+            }
+            if(param.OrderBy.Trim() == "price-asc")
+            {
+                items = items.OrderByDescending(u => u.UnitPrice).Reverse().ToList();
+            }
+            if(param.OrderBy.Trim() == "created-asc")
+            {
+                items = items.OrderByDescending(u => u.CreatedDate).Reverse().ToList();
+            }
+            if(param.SearchTerm.Trim() != "")
+            {
+                items = items.Where(i => i.Title.Contains(param.SearchTerm)).ToList();
+            }
+            if(param.MinPrice > 0)
+            {
+                items = items.Where(i => i.UnitPrice >= param.MinPrice).ToList();
+            }
+            if(param.MaxPrice > 0)
+            {
+                items = items.Where(i => i.UnitPrice <= param.MaxPrice).ToList();
+            }
+            return await PagedList<Item>.CreateAsync(items.ToList().AsQueryable(), param.PageNumber, param.pageSize);
         }
 
         public async Task<Item> DeleteItem(int id)

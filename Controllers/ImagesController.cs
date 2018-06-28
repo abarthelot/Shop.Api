@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ using ShopApp.API.Helpers;
 using ShopApp.API.Models;
 
 namespace ShopApp.API.Controllers {
+    [ServiceFilter(typeof(LogUserActivity))]
     [Authorize]
     [Route ("api/items/{itemId}/images")]
     public class ImagesController : Controller {
@@ -77,6 +79,7 @@ namespace ShopApp.API.Controllers {
 
             var image = _mapper.Map<Image>(imageDto);
             image.User = user;
+            image.DateAdded = DateTime.Now;
 
             if(!user.Photo.Any(m => m.IsProfilePic))
             {

@@ -25,6 +25,8 @@ namespace ShopApp.API.Models
             Photo = new Collection<Image>();
             PurchasedItems = new Collection<Item>();
             Favoriteslist = new Collection<FavoriteItem>();
+            Joined = DateTime.Now;
+            LastActive = DateTime.Now;
         }
     }
 }

@@ -1,6 +1,6 @@
 [
     {
-      "Title": "Test Harddisk2",
+      "Title": "Test Harddisk3",
       "IsService": false,
       "Description": "xcdcdfd dfsdfsdfs sdfsdf sfsdf",
       "ShipingAddress": "352 School Lane, Cannondale, South Carolina, 2825",
@@ -8,13 +8,93 @@
       "CreatedDate": "2017-06-06",
       "Quantity": 20,
       "OtherUrl": "",
-      "UserId": 1, 
+      "UserId": 5,
+      "UnitPrice": 15, 
+      "Photo": [
+        {
+          "url": "https://images.techhive.com/images/article/2015/08/osx-hard-drive-icon-100608523-large.jpeg",
+          "IsProfilePic": false,
+          "IsItemImage": false,
+          "UserId": 5
+        }
+      ]
+    },
+    {
+      "Title": "Test Harddisk4",
+      "IsService": false,
+      "Description": "xcdcdfd dfsdfsdfs sdfsdf sfsdf",
+      "ShipingAddress": "352 School Lane, Cannondale, South Carolina, 2825",
+      "ShipingCountry": "USA",
+      "CreatedDate": "2017-06-06",
+      "Quantity": 20,
+      "OtherUrl": "",
+      "UserId": 5,
+      "UnitPrice": 15, 
+      "Photo": [
+        {
+          "url": "https://images.techhive.com/images/article/2015/08/osx-hard-drive-icon-100608523-large.jpeg",
+          "IsProfilePic": false,
+          "IsItemImage": false,
+          "UserId": 5
+        }
+      ]
+    },
+    {
+      "Title": "Test Service",
+      "IsService": true,
+      "Description": "xcdcdfd dfsdfsdfs sdfsdf sfsdf",
+      "ShipingAddress": "352 School Lane, Cannondale, South Carolina, 2825",
+      "ShipingCountry": "USA",
+      "CreatedDate": "2017-06-06",
+      "Quantity": 20,
+      "OtherUrl": "",
+      "UserId": 1,
+      "UnitPrice": 25, 
       "Photo": [
         {
           "url": "https://images.techhive.com/images/article/2015/08/osx-hard-drive-icon-100608523-large.jpeg",
           "IsProfilePic": false,
           "IsItemImage": false,
           "UserId": 1
+        }
+      ]
+    },
+    {
+      "Title": "Test Service2",
+      "IsService": true,
+      "Description": "xcdcdfd dfsdfsdfs sdfsdf sfsdf",
+      "ShipingAddress": "352 School Lane, Cannondale, South Carolina, 2825",
+      "ShipingCountry": "USA",
+      "CreatedDate": "2017-06-06",
+      "Quantity": 20,
+      "OtherUrl": "",
+      "UserId": 3,
+      "UnitPrice": 15, 
+      "Photo": [
+        {
+          "url": "https://images.techhive.com/images/article/2015/08/osx-hard-drive-icon-100608523-large.jpeg",
+          "IsProfilePic": false,
+          "IsItemImage": false,
+          "UserId": 3
+        }
+      ]
+    },{
+      "Title": "Test Service3",
+      "IsService": true,
+      "Description": "xcdcdfd dfsdfsdfs sdfsdf sfsdf",
+      "ShipingAddress": "352 School Lane, Cannondale, South Carolina, 2825",
+      "ShipingCountry": "USA",
+      "CreatedDate": "2017-06-06",
+      "Quantity": 30,
+      "OtherUrl": "",
+      "UserId": 5,
+      "UnitPrice": 15, 
+      "Photo": [
+        {
+          "url": "https://images.techhive.com/images/article/2015/08/osx-hard-drive-icon-100608523-large.jpeg",
+          "IsProfilePic": false,
+          "IsItemImage": false,
+          "UserId": 5
         }
       ]
     }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ShopApp.API.Helpers;
 using ShopApp.API.Models;
 
 namespace ShopApp.API.Data
@@ -12,7 +13,7 @@ namespace ShopApp.API.Data
          Task<IEnumerable<User>> GetUsers();
          Task<User> GetUser(int id);
          Task<Item> CreateItem(Item item);
-         Task<IEnumerable<Item>> GetItems();
+         Task<PagedList<Item>> GetItems(ItemParams param);
          Task<Item> GetItem(int id);
          Task<IEnumerable<FavoriteItem>> GetFavorites(int id);
          Task<Image> GetImage(int id);

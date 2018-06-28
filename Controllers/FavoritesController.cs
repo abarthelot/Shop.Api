@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShopApp.API.Data;
 using ShopApp.API.Dtos;
+using ShopApp.API.Helpers;
 
 namespace ShopApp.API.Controllers
 {
+    [ServiceFilter(typeof(LogUserActivity))]
     [Authorize]
     [Route ("api/[controller]")]
     public class FavoritesController: Controller

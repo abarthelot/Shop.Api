@@ -8,6 +8,7 @@ using ShopApp.API.Dtos;
 using ShopApp.API.Models;
 using System.Security.Claims;
 using System;
+using ShopApp.API.Helpers;
 
 namespace ShopApp.API.Controllers
 {
@@ -25,9 +26,25 @@ namespace ShopApp.API.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> GetItems () {
-            var items = await _repo.GetItems();
+        public async Task<IActionResult> GetItems (ItemParams param) 
+        {
+            
+            if(string.IsNullOrEmpty(param.IsService))
+            {
+                param.IsService = "all";
+            }
+            if(string.IsNullOrEmpty(param.SearchTerm))
+            {
+                param.SearchTerm = "";
+            }
+            if(string.IsNullOrEmpty(param.OrderBy))
+            {
+                param.OrderBy = "created-dsc";
+            }
+            var items = await _repo.GetItems(param);
             var itemsToReturn = _mapper.Map<IEnumerable<ItemsForListDto>>(items);
+
+            Response.AddPagination(items.CurrentPage, items.PageSize, items.TotalCount, items.TotalPages);
             return Ok (itemsToReturn);
         }
 

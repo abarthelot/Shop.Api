@@ -14,6 +14,7 @@ using ShopApp.API.Helpers;
 using ShopApp.API.Models;
 
 namespace ShopApp.API.Controllers {
+    [ServiceFilter(typeof(LogUserActivity))]
     [Authorize]
     [Route ("api/[controller]")]
     public class UsersController : Controller {
