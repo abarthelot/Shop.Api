@@ -86,6 +86,7 @@ namespace ShopApp.API
             //seeder.SeedUsers();
             //seeder.SeedItems();
             //seeder.SeedFav();
+            //seeder.SeedMessages();
             app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
             app.UseAuthentication();
             app.UseMvc();

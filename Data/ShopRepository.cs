@@ -73,6 +73,7 @@ namespace ShopApp.API.Data
                 }
 
             }
+            
             if(param.OrderBy.Trim() == "price-dsc")
             {
                 items = items.OrderByDescending(u => u.UnitPrice).ToList();
@@ -87,7 +88,7 @@ namespace ShopApp.API.Data
             }
             if(param.SearchTerm.Trim() != "")
             {
-                items = items.Where(i => i.Title.Contains(param.SearchTerm)).ToList();
+                items = items.Where(i => i.Title.ToLower().Contains(param.SearchTerm.ToLower())).ToList();
             }
             if(param.MinPrice > 0)
             {
@@ -97,6 +98,8 @@ namespace ShopApp.API.Data
             {
                 items = items.Where(i => i.UnitPrice <= param.MaxPrice).ToList();
             }
+            
+            
             return await PagedList<Item>.CreateAsync(items.ToList().AsQueryable(), param.PageNumber, param.pageSize);
         }
 
@@ -108,10 +111,53 @@ namespace ShopApp.API.Data
             return item;
         }
 
-        public async Task<IEnumerable<FavoriteItem>> GetFavorites(int userId)
+        public async Task<PagedList<Item>> GetFavorites(int userId, ItemParams param)
         {
+            var returnItem = new List<Item>();
             var items = await _context.Favorites.Include(i => i.Item).ThenInclude(item => item.Photo).Where(f => f.UserId == userId).ToListAsync();
-            return items;
+            for(int i = 0; i < items.Count; i ++)
+            {
+                returnItem.Add(items[i].Item);
+            }
+
+            if(param.IsService != "all")
+            {
+                if(param.IsService == "service")
+                {
+                    returnItem = returnItem.Where(i => i.IsService == true).ToList();
+                }else
+                {
+                    returnItem = returnItem.Where(i => i.IsService == false).ToList();
+                }
+
+            }
+
+            if(param.OrderBy.Trim() == "price-dsc")
+            {
+                returnItem = returnItem.OrderByDescending(u => u.UnitPrice).ToList();
+            }
+            if(param.OrderBy.Trim() == "price-asc")
+            {
+                returnItem = returnItem.OrderByDescending(u => u.UnitPrice).Reverse().ToList();
+            }
+            if(param.OrderBy.Trim() == "created-asc")
+            {
+                returnItem = returnItem.OrderByDescending(u => u.CreatedDate).Reverse().ToList();
+            }
+            if(param.SearchTerm.Trim() != "")
+            {
+                returnItem = returnItem.Where(i => i.Title.ToLower().Contains(param.SearchTerm.ToLower())).ToList();
+            }
+            if(param.MinPrice > 0)
+            {
+                returnItem = returnItem.Where(i => i.UnitPrice >= param.MinPrice).ToList();
+            }
+            if(param.MaxPrice > 0)
+            {
+                returnItem = returnItem.Where(i => i.UnitPrice <= param.MaxPrice).ToList();
+            }
+
+            return await PagedList<Item>.CreateAsync(returnItem.ToList().AsQueryable(), param.PageNumber, param.pageSize);
         }
 
         public Task<Image> GetImage(int id)
@@ -135,6 +181,56 @@ namespace ShopApp.API.Data
         public Image GetUserImage(int id)
         {
             return _context.Users.FirstOrDefault(i => i.Id == id).Photo.FirstOrDefault(p => p.IsProfilePic == true && p.IsItemImage == false);
+        }
+
+        public async Task<FavoriteItem> GetFavorite(int userId, int itemId)
+        {
+            return await _context.Favorites.FirstOrDefaultAsync(u => u.UserId == userId && u.ItemId == itemId);
+        }
+
+        public List<int> GetAllFavoritesIds(int id)
+        {
+            List<int> favoriteItem = _context.Favorites.ToList().Where(f => f.UserId == id).Select(i => i.ItemId).ToList();
+            return favoriteItem;
+        }
+
+        public async Task<Message> GetMessage(int id)
+        {
+            return await _context.Message.Include(i => i.AboutItem).Include(s => s.Sender).Include(r => r.Recipient).FirstOrDefaultAsync(m => m.Id == id);
+        }
+
+        public async Task<PagedList<Message>> GetMessagesForUser(MessageParam param)
+        {
+            var messages = _context.Message.Include(u => u.Sender).ThenInclude(p => p.Photo)
+                                           .Include(u => u.Recipient).ThenInclude(p => p.Photo)
+                                           .Include(u => u.AboutItem).AsQueryable();
+            
+            switch(param.MessageContainer.ToLower())
+            {
+                case "inbox":
+                    messages = messages.Where(u => u.RecipientId == param.UserId && u.RecipientDeleted == false);
+                    break;
+                case "outbox":
+                    messages = messages.Where(u => u.SenderId == param.UserId && u.SenderDeleted == false);
+                    break;
+                case "unread":
+                    messages = messages.Where(u => u.RecipientId == param.UserId && u.RecipientDeleted == false && u.IsRead == false);
+                    break;
+            }
+            messages = messages.OrderByDescending(d => d.MessageSent);
+            var messagesList = messages.ToList();
+            return await PagedList<Message>.CreateAsync(messagesList.AsQueryable(), param.PageNumber, param.PageSize);
+        }
+
+        public async Task<IEnumerable<Message>> GetMessagesThread(int userId, int recipientId, int itemId)
+        {
+            var messages = await _context.Message.Include(u => u.Sender).ThenInclude(p => p.Photo)
+                                            .Include(u => u.Recipient).ThenInclude(p => p.Photo)
+                                            .Include(u => u.AboutItem)
+                                            .Where(m => (m.RecipientId == userId && m.RecipientDeleted == false && m.SenderId == recipientId && m.AboutItemId == itemId) 
+                                                    || (m.RecipientId == recipientId && m.SenderDeleted == false && m.SenderId == userId && m.AboutItemId == itemId))
+                                            .OrderByDescending(m => m.MessageSent).ToListAsync();
+            return messages;
         }
     }
 }

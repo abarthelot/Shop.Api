@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace ShopApp.API.Dtos
 {
@@ -12,5 +13,6 @@ namespace ShopApp.API.Dtos
         public int Quantity { get; set; }
         public string ImageUrl { get; set; }
         public double UnitPrice { get; set; }
+        public bool isFavourites { get; set; }
     }
 }

@@ -36,6 +36,12 @@ namespace ShopApp.API.Helpers
             CreateMap<ItemForUpdateDto,Item>(); 
             CreateMap<ImagesForCreateDto, Image>();
             CreateMap<Image, ImageForReturnDto>();
+            CreateMap<MessageForCreateDto, Message>();
+            CreateMap<Message, MessageForCreateDto>();
+            CreateMap<Message, MessageToReturnDto>()
+                        .ForMember(m => m.SenderPhotoUrl, opt => opt.MapFrom(u => u.Sender.Photo.FirstOrDefault(p => p.IsProfilePic && p.IsItemImage == false).Url))
+                        .ForMember(m => m.RecipientPhotoUrl, opt => opt.MapFrom(u => u.Recipient.Photo.FirstOrDefault(p => p.IsProfilePic && p.IsItemImage == false).Url));
+
         }
     }
 }

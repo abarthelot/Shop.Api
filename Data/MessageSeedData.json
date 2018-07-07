@@ -1,0 +1,23 @@
+[
+  {
+    "SenderId": 5,
+    "RecipientId": 1,
+    "AboutItemId": 3,
+    "Content": "Test messages 3",
+    "MessageSent": "2017-06-06"
+  },
+  {
+    "SenderId": 5,
+    "RecipientId": 1,
+    "AboutItemId": 3,
+    "Content": "Test messages 4",
+    "MessageSent": "2017-06-06"
+  },
+  {
+    "SenderId": 1,
+    "RecipientId": 5,
+    "AboutItemId": 1,
+    "Content": "Test messages sent 2",
+    "MessageSent": "2017-06-06"
+  }
+]

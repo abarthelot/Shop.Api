@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -23,10 +24,24 @@ namespace ShopApp.API.Controllers
 
 
         [HttpGet ("{id}")]
-        public async Task<IActionResult> GetFavorite (int id) {
-            var item = await _repo.GetFavorites(id);
-            //var itemToReturn = _mapper.Map<FavoriteItemsForListDto>(item);
-            return Ok (item);
+        public async Task<IActionResult> GetFavorites (int id, ItemParams param) 
+        {
+            if(string.IsNullOrEmpty(param.IsService))
+            {
+                param.IsService = "all";
+            }
+            if(string.IsNullOrEmpty(param.SearchTerm))
+            {
+                param.SearchTerm = "";
+            }
+            if(string.IsNullOrEmpty(param.OrderBy))
+            {
+                param.OrderBy = "created-dsc";
+            }
+            var items = await _repo.GetFavorites(id, param);
+            var itemsToReturn = _mapper.Map<IEnumerable<ItemsForListDto>>(items);
+            Response.AddPagination(items.CurrentPage, items.PageSize, items.TotalCount, items.TotalPages);
+            return Ok (itemsToReturn);
         }
     }
 }

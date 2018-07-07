@@ -19,6 +19,8 @@ namespace ShopApp.API.Models
         public ICollection<Image> Photo {get; set;}
         public ICollection<Item> PurchasedItems {get; set;}
         public ICollection<FavoriteItem> Favoriteslist {get; set;}
+        public ICollection<Message> MessageSent {get; set;}
+        public ICollection<Message> MessageRecieved {get; set;}
     
         public User()
         {

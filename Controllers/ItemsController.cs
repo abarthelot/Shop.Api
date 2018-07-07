@@ -9,6 +9,7 @@ using ShopApp.API.Models;
 using System.Security.Claims;
 using System;
 using ShopApp.API.Helpers;
+using System.Linq;
 
 namespace ShopApp.API.Controllers
 {
@@ -41,8 +42,26 @@ namespace ShopApp.API.Controllers
             {
                 param.OrderBy = "created-dsc";
             }
+            var currentUserId = 0;
+            if(User.FindFirst(ClaimTypes.NameIdentifier) != null)
+            {
+                currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            }
+            List<int> favoriteItems = _repo.GetAllFavoritesIds(currentUserId);
             var items = await _repo.GetItems(param);
+            
             var itemsToReturn = _mapper.Map<IEnumerable<ItemsForListDto>>(items);
+
+            // if((favoriteItems!= null) && (!favoriteItems.Any()) )
+            // {
+            //     for (int i = 0; i < itemsToReturn.Count(); i++)
+            //     {
+            //         if(favoriteItems.Contains(items[i].Id))
+            //         {
+                        
+            //         }
+            //     }
+            // }
 
             Response.AddPagination(items.CurrentPage, items.PageSize, items.TotalCount, items.TotalPages);
             return Ok (itemsToReturn);

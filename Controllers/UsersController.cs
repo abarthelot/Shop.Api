@@ -130,5 +130,47 @@ namespace ShopApp.API.Controllers {
             
             return BadRequest("Error while saving.");
         }
+
+        [HttpPost("{id}/favorite/{itemId}")]
+        public async Task<IActionResult> AddFavorite(int id, int itemId)
+        {
+            if(id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            {
+                return Unauthorized();
+            }
+
+            var favorite = await _repo.GetFavorite(id, itemId);
+
+            if(favorite != null)
+            {
+                return BadRequest("This item is already one of your favorites.");
+            }
+
+            if(await _repo.GetUser(id) == null)
+            {
+                return NotFound("User not found");
+            }
+
+            if(await _repo.GetItem(itemId) == null)
+            {
+                return NotFound("Item not found");
+            }
+
+            favorite = new FavoriteItem 
+            {
+                UserId = id,
+                ItemId = itemId
+            };
+
+            _repo.Add<FavoriteItem>(favorite);
+
+            if(await _repo.SaveAll())
+            {
+                return Ok();
+            }
+            
+            return BadRequest("Error while saving.");
+        }
+
     }
 }
