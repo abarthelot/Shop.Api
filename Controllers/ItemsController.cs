@@ -117,5 +117,43 @@ namespace ShopApp.API.Controllers
             }
             throw new Exception("Failed to save item.");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddItem ([FromBody]ItemForCreateDto item)
+        {
+
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var currentItem = new Item();
+
+            currentItem.User = _repo.GetUser(currentUserId).Result;
+            currentItem.UserId = currentUserId;
+
+            currentItem.Title = item.Title;
+            currentItem.IsService = item.IsService;
+            currentItem.Description = item.Description;
+            currentItem.ShipingAddress = item.ShipingAddress;
+            currentItem.ShipingCountry = item.ShipingCountry;
+            currentItem.CreatedDate = DateTime.Now;
+            currentItem.Quantity = int.Parse(item.Quantity);
+            currentItem.UnitPrice = Double.Parse(item.UnitPrice);
+            currentItem.OtherUrl = item.OtherUrl;
+        
+            _repo.Add(currentItem);
+
+            if(await _repo.SaveAll())
+            {
+                var itemFromRepo = _repo.GetItemsByUser(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)).Result.Where(i => i.CreatedDate == currentItem.CreatedDate && i.Title == currentItem.Title).FirstOrDefault();
+                var itemToReturn = _mapper.Map<ItemForDetailsDto>(itemFromRepo);
+                return Ok(itemToReturn);
+            }
+            throw new Exception("Failed to save item.");
+        }
+
+        [HttpGet ("quantity/{id}")]
+        public async Task<IActionResult> GetQuantityItem (int id) {
+            var item = await _repo.GetItem (id);
+            var itemToReturn = item.Quantity;
+            return Ok (itemToReturn);
+        }
     }
 }

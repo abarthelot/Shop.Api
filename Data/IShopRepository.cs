@@ -25,6 +25,9 @@ namespace ShopApp.API.Data
         Task<Message> GetMessage(int id);
         Task<PagedList<Message>> GetMessagesForUser(MessageParam param);
         Task<IEnumerable<Message>> GetMessagesThread(int userId, int recipientId, int itemId);
+        Task<List<Cart>> GetCartItems(int userId);
+        Task<Cart> GetCartItem(int userId, int itemId);
+        Task<List<Item>> GetItemsByUser(int userId);
 
     }
 }

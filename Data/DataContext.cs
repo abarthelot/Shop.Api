@@ -13,6 +13,7 @@ namespace ShopApp.API.Data
         public DbSet<Item> Items{ get; set; }
         public DbSet<FavoriteItem> Favorites { get; set; }
         public DbSet<Message> Message { get; set; }
+        public DbSet<Cart> Cart { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

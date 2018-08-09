@@ -232,5 +232,23 @@ namespace ShopApp.API.Data
                                             .OrderByDescending(m => m.MessageSent).ToListAsync();
             return messages;
         }
+
+        public async Task<List<Cart>> GetCartItems(int userId)
+        {
+            var cart = await _context.Cart.Include(c => c.User).Include(i => i.Item).Where(c => c.UserId == userId).ToListAsync();
+            return cart;
+        }
+
+        public async Task<List<Item>> GetItemsByUser(int userId)
+        {
+            var item = await _context.Items.Where(c => c.UserId == userId).OrderBy(c => c.CreatedDate).ToListAsync();
+            return item;
+        }
+
+        public async Task<Cart> GetCartItem(int userId, int itemId)
+        {
+            var cart = await _context.Cart.Include(c => c.User).Include(i => i.Item).ThenInclude(p => p.Photo).Where(c => c.UserId == userId && c.ItemId == itemId).FirstOrDefaultAsync();
+            return cart;
+        }
     }
 }

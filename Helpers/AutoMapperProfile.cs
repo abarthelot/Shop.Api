@@ -20,7 +20,24 @@ namespace ShopApp.API.Helpers
                 }
             );
 
+            CreateMap<User, UserForDetailsDto>().ForMember(
+                dest => dest.PhotoUrl,opt => {
+                    opt.MapFrom(src => src.Photo.FirstOrDefault(p => p.IsProfilePic == true && p.IsItemImage == false).Url);
+                }
+            );
+            CreateMap<User, UserForDetailsDto>().ForMember(
+                dest => dest.PhotoUrl,opt => {
+                    opt.MapFrom(src => src.Photo.FirstOrDefault(p => p.IsProfilePic == true && p.IsItemImage == false).Url);
+                }
+            );
+
             CreateMap<Image, ImagesForDetailsDto>();
+            CreateMap<Cart, CartItemForListDto>().ForPath(
+                dest => dest.Item.ImageUrl,opt => {
+                    opt.MapFrom(src => src.Item.Photo.FirstOrDefault(p => p.IsProfilePic == true && p.IsItemImage == false).Url);
+                }
+            );
+            CreateMap<CartItemForListDto, Cart>();
 
             CreateMap<Item, ItemsForListDto>().ForMember(
                 dest => dest.ImageUrl,opt => {
