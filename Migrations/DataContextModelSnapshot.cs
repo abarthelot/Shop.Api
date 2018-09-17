@@ -102,6 +102,8 @@ namespace ShopApp.API.Migrations
 
                     b.Property<string>("OtherUrl");
 
+                    b.Property<int?>("PaypalTransactionId");
+
                     b.Property<int>("Quantity");
 
                     b.Property<string>("ShipingAddress");
@@ -115,6 +117,8 @@ namespace ShopApp.API.Migrations
                     b.Property<int>("UserId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PaypalTransactionId");
 
                     b.HasIndex("UserId");
 
@@ -153,6 +157,34 @@ namespace ShopApp.API.Migrations
                     b.HasIndex("SenderId");
 
                     b.ToTable("Message");
+                });
+
+            modelBuilder.Entity("ShopApp.API.Models.PaypalTransaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Intent");
+
+                    b.Property<string>("OrderID");
+
+                    b.Property<double>("PaidAmount");
+
+                    b.Property<string>("PayerID");
+
+                    b.Property<string>("PaymentID");
+
+                    b.Property<string>("PaymentToken");
+
+                    b.Property<DateTime>("TransactionDate");
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PaypalTransactions");
                 });
 
             modelBuilder.Entity("ShopApp.API.Models.User", b =>
@@ -235,6 +267,10 @@ namespace ShopApp.API.Migrations
 
             modelBuilder.Entity("ShopApp.API.Models.Item", b =>
                 {
+                    b.HasOne("ShopApp.API.Models.PaypalTransaction")
+                        .WithMany("Items")
+                        .HasForeignKey("PaypalTransactionId");
+
                     b.HasOne("ShopApp.API.Models.User", "User")
                         .WithMany("PurchasedItems")
                         .HasForeignKey("UserId")
@@ -257,6 +293,14 @@ namespace ShopApp.API.Migrations
                         .WithMany("MessageSent")
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("ShopApp.API.Models.PaypalTransaction", b =>
+                {
+                    b.HasOne("ShopApp.API.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

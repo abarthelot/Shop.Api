@@ -59,6 +59,23 @@ namespace ShopApp.API.Helpers
                         .ForMember(m => m.SenderPhotoUrl, opt => opt.MapFrom(u => u.Sender.Photo.FirstOrDefault(p => p.IsProfilePic && p.IsItemImage == false).Url))
                         .ForMember(m => m.RecipientPhotoUrl, opt => opt.MapFrom(u => u.Recipient.Photo.FirstOrDefault(p => p.IsProfilePic && p.IsItemImage == false).Url));
 
+            CreateMap<Cart, PayPalCart>().ForMember(
+                dest => dest.Name, opt => {
+                    opt.MapFrom(src => src.Item.Title);
+                }
+            ).ForMember(
+                dest => dest.Description, opt => {
+                    opt.MapFrom(src => src.Item.Title);
+                }
+            ).ForMember(
+                dest => dest.Quantity, opt => {
+                    opt.MapFrom(src => src.Quantity);
+                }
+            ).ForMember(
+                dest => dest.Price, opt => {
+                    opt.MapFrom(src => src.Item.UnitPrice);
+                }
+            );
         }
     }
 }

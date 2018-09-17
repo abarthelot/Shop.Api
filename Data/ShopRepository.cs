@@ -250,5 +250,11 @@ namespace ShopApp.API.Data
             var cart = await _context.Cart.Include(c => c.User).Include(i => i.Item).ThenInclude(p => p.Photo).Where(c => c.UserId == userId && c.ItemId == itemId).FirstOrDefaultAsync();
             return cart;
         }
+
+        public IEnumerable<Item> GetItemsFormCart(int userId)
+        {
+            var cart = _context.Cart.Include(c => c.User).Include(i => i.Item).Where(c => c.UserId == userId).Select(s => s.Item).ToListAsync();
+            return cart.Result;
+        }
     }
 }

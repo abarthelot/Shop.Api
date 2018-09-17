@@ -5,10 +5,13 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using ShopApp.API.Data;
 using ShopApp.API.Dtos;
+using ShopApp.API.Dtos.Payment;
 using ShopApp.API.Helpers;
 using ShopApp.API.Models;
+using ShopApp.API.Paypal;
 
 namespace ShopApp.API.Controllers
 {
@@ -19,10 +22,12 @@ namespace ShopApp.API.Controllers
     {
         private readonly IShopRepository _repo;
         public readonly IMapper _mapper;
-        public CartController(IShopRepository repo, IMapper mapper)
+        private readonly IOptions<PaypalSettings> _paypalConfig;
+        public CartController(IShopRepository repo, IMapper mapper, IOptions<PaypalSettings> paypalConfig)
         {
             _repo = repo;
             _mapper = mapper;
+            _paypalConfig = paypalConfig;
         }
 
         [HttpGet ("{userId}")]
@@ -39,6 +44,8 @@ namespace ShopApp.API.Controllers
                 return NotFound();
             }
             var returnCart = _mapper.Map<IEnumerable<CartItemForListDto>>(cartItems);
+
+            
             return Ok(cartItems);
         }
 
@@ -76,12 +83,14 @@ namespace ShopApp.API.Controllers
             if(currentCart != null){
                 currentCart.Quantity = currentCart.Quantity + quantity;
             }else{
-                Cart cart = new Cart();
-                cart.UserId = userId;
-                cart.User = await _repo.GetUser(userId);
-                cart.ItemId = itemId;
-                cart.Item = item;
-                cart.Quantity = quantity;
+                Cart cart = new Cart
+                {
+                    UserId = userId,
+                    User = await _repo.GetUser(userId),
+                    ItemId = itemId,
+                    Item = item,
+                    Quantity = quantity
+                };
                 _repo.Add(cart);
             }
 
@@ -164,6 +173,58 @@ namespace ShopApp.API.Controllers
                 sum = sum + (item.Item.UnitPrice * item.Quantity);
             }
             return Ok(sum);
+        }
+
+        [HttpGet("paypal/cart/{userId}")]
+        public async Task<IActionResult> GetPaypalCart(int userId)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            {
+                return Unauthorized();
+            }
+            var cartItems = await _repo.GetCartItems(userId);
+            if (cartItems == null)
+            {
+                return NotFound();
+            }
+            //var returnCart = _mapper.Map<IEnumerable<PayPalCart>>(cartItems);
+
+
+            return Ok(_mapper.Map<IEnumerable<PayPalCart>>(cartItems));
+        }
+
+        [HttpPost("paypal/cart/complete")]
+        public async Task<IActionResult> FinPaypalCart([FromBody]PaymentTransactionDto payment)
+        {
+            if (payment.UserId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            {
+                return Unauthorized();
+            }
+            var cartItems = await _repo.GetCartItems(payment.UserId);
+            
+            //var returnCart = _mapper.Map<IEnumerable<PayPalCart>>(cartItems);
+            PaypalTransaction transaction = new PaypalTransaction();
+            transaction.Intent = payment.Info.Intent;
+            transaction.OrderID = payment.Info.OrderID;
+            transaction.PayerID = payment.Info.PayerID;
+            transaction.PaymentID = payment.Info.PaymentID;
+            transaction.PaymentToken = payment.Info.PaymentToken;
+            transaction.UserId = payment.UserId;
+            transaction.User = await _repo.GetUser(payment.UserId);
+            transaction.Items = _repo.GetItemsFormCart(payment.UserId);
+            _repo.Add(transaction);
+
+            foreach (Cart cart in cartItems)
+            {
+                var item = _repo.GetItem(cart.Item.Id);
+                item.Result.Quantity = item.Result.Quantity - cart.Quantity;
+                _repo.Delete(cart);
+            }
+            if (await _repo.SaveAll())
+            {
+                return NoContent();
+            }
+            throw new Exception("Failed to delete item from your cart.");
         }
     }
 }

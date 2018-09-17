@@ -14,6 +14,7 @@ namespace ShopApp.API.Data
         public DbSet<FavoriteItem> Favorites { get; set; }
         public DbSet<Message> Message { get; set; }
         public DbSet<Cart> Cart { get; set; }
+        public DbSet<PaypalTransaction> PaypalTransactions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
